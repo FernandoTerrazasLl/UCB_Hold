@@ -190,4 +190,37 @@ public class GrupoEquipoService : BaseServicios, IGrupoEquipoService
             Cantidad = fila["cantidad_grupo_equipo"] == DBNull.Value ? null : Convert.ToInt32(fila["cantidad_grupo_equipo"])
         };
     }
+
+    public void AgregarGrupoEquipoAFavoritosPorGrupoEquipoId(int grupoEquipoId, bool favorito)
+    {
+        _grupoEquipoRepository.AgregarAFavoritosPorGrupoEquipo(grupoEquipoId, favorito);
+    }
+
+    public List<GrupoEquipoDto>? ObtenerTodosGruposEquiposFavoritos()
+    {
+        try
+        {
+            DataTable resultado = _grupoEquipoRepository.ObtenerTodosFavoritos();
+            var lista = new List<GrupoEquipoDto>(resultado.Rows.Count);
+            foreach (DataRow fila in resultado.Rows)
+            {
+                var dto = MapearFilaADto(fila) as GrupoEquipoDto;
+                if (dto != null) lista.Add(dto);
+            }
+            return lista;
+        }
+        catch { throw; }
+    }
+
+    public GrupoEquipoDto? ObtenerGrupoEquipoFavoritoPorId(int grupoEquipoId)
+    {
+        try
+        {
+            DataTable resultado = _grupoEquipoRepository.ObtenerFavoritosPorGrupoEquipoId(grupoEquipoId);
+            if (resultado.Rows.Count == 0) return null;
+            var dto = MapearFilaADto(resultado.Rows[0]) as GrupoEquipoDto;
+            return dto;
+        }
+        catch { throw; }
+    }
 }

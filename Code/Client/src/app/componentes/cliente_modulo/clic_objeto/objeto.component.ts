@@ -6,6 +6,7 @@ import { GrupoequipoService } from '../../../services/APIS/GrupoEquipo/grupoequi
 import { GrupoEquipo } from '../../../models/grupo_equipo';
 import { CarritoService } from '../../../services/carrito/carrito.service';
 import { ComentariosComponent } from './comentarios/comentarios.component';
+import { FavoritosService } from '../../../services/favoritos/favoritos.service';
 
 
 @Component({
@@ -19,10 +20,11 @@ export class ObjetoComponent {
   @Input() id: string = ''
 
   producto: GrupoEquipo = new GrupoEquipo();
+  addedToCart = false;
+  esFavorito = false;
+  cargandoFavorito = false;
 
-   addedToCart = false;
-
-  constructor(private route: ActivatedRoute , private servicio : GrupoequipoService, private carrito : CarritoService) { }
+  constructor(private route: ActivatedRoute , private servicio : GrupoequipoService, private carrito : CarritoService, private favoritosService: FavoritosService) { }
 
 
   ngOnInit(): void {
@@ -35,7 +37,10 @@ export class ObjetoComponent {
     this.id = routeId;
     
     this.servicio.getproducto(routeId).subscribe({
-      next: (data) => this.producto = data,
+      next: (data) => {
+        this.producto = data;
+        this.verificarEsFavorito();
+      },
       error: (error) => {
         console.error('Error completo del backend:', error.error.mensaje);
         this.producto = {
@@ -69,5 +74,28 @@ export class ObjetoComponent {
     this.addedToCart = true;
   }
 
+  verificarEsFavorito() {
+    if (this.producto.id > 0) {
+      this.servicio.verificarEsFavorito(this.producto.id).subscribe(esFavorito => {
+        this.esFavorito = esFavorito;
+      });
+    }
+  }
 
+  toggleFavorito() {
+    if (this.cargandoFavorito) return;
+    this.cargandoFavorito = true;
+    const nuevoEstado = !this.esFavorito; 
+
+    this.servicio.agregarFavorito(this.producto.id, nuevoEstado).subscribe({
+      next: () => {
+        this.esFavorito = nuevoEstado;
+        this.cargandoFavorito = false;
+        this.favoritosService.actualizarFavoritos();
+      },
+      error: () => {
+        this.cargandoFavorito = false;
+      }
+    });
+  }
 }

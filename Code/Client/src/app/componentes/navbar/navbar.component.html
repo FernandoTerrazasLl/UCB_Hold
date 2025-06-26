@@ -39,12 +39,15 @@
       @if(notificaciones) {
             <span class="pendiente">!</span>
       }
-  
-      
-  
     </button>
 
-
+    <button
+      type="button"
+      class="icon-button favorites-button"
+      (click)="toggleFavoritos()">
+      ★
+      <span class="favorites-count">{{ cantidadFavoritos }}</span>
+    </button>
 
     <button
       type="button"
@@ -82,12 +85,17 @@
   </div>
 </nav>
 
-<!-- Espaciador para empujar el contenido hacia abajo -->
 <div class="navbar-spacer"></div>
 
 @if(showUserMenu()) {
   <app-usuario-previo
     [showUserMenu]="showUserMenu"
   ></app-usuario-previo>
+}
+
+@if(showFavoritos()) {
+  <app-favoritos-menu
+    [showFavoritos]="showFavoritos"
+  ></app-favoritos-menu>
 }
 

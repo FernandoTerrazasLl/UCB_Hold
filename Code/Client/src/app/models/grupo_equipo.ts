@@ -7,6 +7,7 @@ export class GrupoEquipo {
   url_data_sheet?: string | null;
   marca?: string | null;
   link?: string | null;
+  favorito?: boolean;
 
   constructor() {
     this.id = 0;
@@ -17,6 +18,7 @@ export class GrupoEquipo {
     this.url_data_sheet = null;
     this.marca = null;
     this.link = null;
+    this.favorito = false;
   }
   
 }

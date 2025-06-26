@@ -1,0 +1,31 @@
+
+<div class="favoritos-overlay" (click)="cerrarMenu()">
+  <div class="favoritos-menu" (click)="$event.stopPropagation()">
+    
+    <div class="header">
+      <h3> Mis Favoritos</h3>
+      <button class="cerrar" (click)="cerrarMenu()">✕</button>
+    </div>
+    
+    <div class="contenido">
+      @if(favoritos.length === 0) {
+        <div class="sin-favoritos">
+          <p>No tienes favoritos aún</p>
+          <small>Agrega productos a tus favoritos para verlos aquí</small>
+        </div>
+      } 
+      @else {
+        @for(favorito of favoritos; track favorito.id) {
+          <div>
+            
+            <div class="info">
+              <h4>{{ favorito.nombre }}</h4>
+              <p>{{ favorito.marca }} {{ favorito.modelo }}</p>
+              <p>-------------------------------------------------------</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

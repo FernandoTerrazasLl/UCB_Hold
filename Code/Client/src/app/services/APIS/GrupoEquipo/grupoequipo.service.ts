@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { GrupoEquipo } from '../../../models/grupo_equipo';
 
 @Injectable({
@@ -99,4 +99,40 @@ export class GrupoequipoService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
+
+
+
+
+
+
+  obtenerFavoritos(): Observable<GrupoEquipo[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/favoritos`).pipe(
+      map(data => data.map(item => ({
+        id: item.Id,
+        nombre: item.Nombre,
+        descripcion: item.Descripcion || '',
+        modelo: ' ' + item.Modelo || '',
+        marca: ' ' + item.Marca || '',
+        url_data_sheet: item.UrlDataSheet || '',
+        link: item.UrlImagen,
+        nombreCategoria: item.NombreCategoria || '',
+        favorito: item.Favorito || false
+      })))
+    );
+  }
+
+  agregarFavorito(id: number, favorito: boolean): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/favoritos/${id}/${favorito}`, {});
+  }
+
+  toggleFavorito(id: number, estadoActual: boolean): Observable<any> {
+    const nuevoEstado = !estadoActual;
+    return this.agregarFavorito(id, nuevoEstado);
+  }
+
+  verificarEsFavorito(id: number): Observable<boolean> {
+    return this.http.get<any>(`${this.apiUrl}/favoritos/${id}`).pipe(
+      map(response => response.Favorito || false)
+    );
+  }
 }

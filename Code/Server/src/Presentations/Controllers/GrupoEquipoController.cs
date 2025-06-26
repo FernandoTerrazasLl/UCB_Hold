@@ -80,4 +80,42 @@ public class GrupoEquipoController : ControllerBase
         catch (ErrorRegistroEnUso ex) { return Conflict(new { error = ex.GetType().Name, mensaje = ex.Message }); }
         catch (Exception ex) { return BadRequest(new { error = ex.GetType().Name, mensaje = ex.Message }); }
     }
+    [HttpGet("favoritos")]
+    public IActionResult ObtenerFavoritos()
+    {
+        try
+        {
+            var resultado = servicio.ObtenerTodosGruposEquiposFavoritos();
+            return Ok(resultado);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.GetType().Name, mensaje = ex.Message });
+        }
+    }
+    [HttpPut("favoritos/{id}/{favorito}")]
+    public IActionResult AgregarAFavoritosPorGrupoEquipoId(int id, bool favorito)
+    {
+        try
+        {
+            servicio.AgregarGrupoEquipoAFavoritosPorGrupoEquipoId(id, favorito);
+            return Ok(new { mensaje = "Grupo de equipo agregado a favoritos exitosamente" });
+        }
+        catch (ErrorRegistroNoEncontrado ex) { return NotFound(new { error = ex.GetType().Name, mensaje = ex.Message }); }
+        catch (ErrorRegistroYaExiste ex) { return Conflict(new { error = ex.GetType().Name, mensaje = ex.Message }); }
+        catch (Exception ex) { return StatusCode(500, new { error = ex.GetType().Name, mensaje = ex.Message }); }
+    }
+    [HttpGet("favoritos/{id}")]
+    public IActionResult ObtenerFavoritosPorGrupoEquipoId(int id)
+    {
+        try
+        {
+            var resultado = servicio.ObtenerGrupoEquipoFavoritoPorId(id);
+            return Ok(resultado);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.GetType().Name, mensaje = ex.Message });
+        }
+    }
 }

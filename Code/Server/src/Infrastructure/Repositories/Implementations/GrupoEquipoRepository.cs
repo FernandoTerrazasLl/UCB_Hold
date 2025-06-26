@@ -78,4 +78,59 @@ public class GrupoEquipoRepository : IGrupoEquipoRepository
         catch (NpgsqlException ex) { throw new ErrorDataBase($"Error de base de datos al obtener grupos de equipos: {ex.Message}", ex.SqlState, null, ex); }
         catch (Exception ex) { throw new ErrorRepository($"Error del repositorio al obtener grupos de equipos: {ex.Message}", ex); }
     }
+
+    public DataTable ObtenerTodosFavoritos()
+    {
+        const string sql = @"SELECT 
+id_grupo_equipo, 
+nombre as nombre_grupo_equipo, 
+modelo as modelo_grupo_equipo, 
+url_data_sheet as url_data_sheet_grupo_equipo,
+marca as marca_grupo_equipo,
+id_categoria as nombre_categoria,
+url_imagen as url_imagen_grupo_equipo, 
+descripcion as descripcion_grupo_equipo,
+cantidad as cantidad_grupo_equipo
+	FROM public.grupos_equipos
+    where favorito = true";
+        try { return _ejecutarConsulta.EjecutarFuncion(sql, new Dictionary<string, object?>()); }
+        catch (NpgsqlException ex) { throw new ErrorDataBase($"Error de base de datos al obtener grupos de equipos favoritos: {ex.Message}", ex.SqlState, null, ex); }
+        catch (Exception ex) { throw new ErrorRepository($"Error del repositorio al obtener grupos de equipos favoritos: {ex.Message}", ex); }
+    }
+
+    public DataTable ObtenerFavoritosPorGrupoEquipoId(int grupoEquipoId)
+    {
+        const string sql = @"SELECT 
+id_grupo_equipo, 
+nombre as nombre_grupo_equipo, 
+modelo as modelo_grupo_equipo, 
+url_data_sheet as url_data_sheet_grupo_equipo,
+marca as marca_grupo_equipo,
+id_categoria as nombre_categoria,
+url_imagen as url_imagen_grupo_equipo, 
+descripcion as descripcion_grupo_equipo,
+cantidad as cantidad_grupo_equipo
+	FROM public.grupos_equipos
+    where id_grupo_equipo = @grupoEquipoId and favorito = true";
+        var parametros = new Dictionary<string, object?>
+        {
+            ["grupoEquipoId"] = grupoEquipoId
+        };
+        try { return _ejecutarConsulta.EjecutarFuncion(sql, parametros); }
+        catch (NpgsqlException ex) { throw new ErrorDataBase($"Error de base de datos al obtener favoritos por grupo de equipo ID: {ex.Message}", ex.SqlState, null, ex); }
+        catch (Exception ex) { throw new ErrorRepository($"Error del repositorio al obtener favoritos por grupo de equipo ID: {ex.Message}", ex); }
+    }
+
+    public void AgregarAFavoritosPorGrupoEquipo(int grupoEquipoId, bool esFavorito)
+    {
+        const string sql = @"UPDATE grupos_equipos SET favorito = @esFavorito WHERE id_grupo_equipo = @grupoEquipoId";
+        var parametros = new Dictionary<string, object?>
+        {
+            ["grupoEquipoId"] = grupoEquipoId,
+            ["esFavorito"] = esFavorito
+        };
+        try { _ejecutarConsulta.EjecutarSpNR(sql, parametros); }
+        catch (NpgsqlException ex) { throw new ErrorDataBase($"Error de base de datos al agregar a favoritos por grupo de equipo ID: {ex.Message}", ex.SqlState, null, ex); }
+        catch (Exception ex) { throw new ErrorRepository($"Error del repositorio al agregar a favoritos por grupo de equipo ID: {ex.Message}", ex); }
+    }
 }

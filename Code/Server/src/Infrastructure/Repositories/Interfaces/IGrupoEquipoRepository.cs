@@ -7,4 +7,7 @@ public interface IGrupoEquipoRepository
     void Actualizar(ActualizarGrupoEquipoComando comando);
     void Eliminar(int id);
     DataTable ObtenerTodos();
+    DataTable ObtenerTodosFavoritos();
+    DataTable ObtenerFavoritosPorGrupoEquipoId(int grupoEquipoId);
+    void AgregarAFavoritosPorGrupoEquipo(int grupoEquipoId,bool favorito);
 }

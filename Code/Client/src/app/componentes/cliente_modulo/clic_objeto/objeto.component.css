@@ -92,6 +92,52 @@
   transition: none;
 }
 
+.botones {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.boton-carrito {
+  background-color: #ffd814;
+  color: #333;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.boton-carrito:hover {
+  background-color: #ffcc00;
+}
+
+.boton-carrito:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.boton-favorito {
+  background-color: white;
+  color: #333;
+  border: 2px solid #ddd;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.boton-favorito:hover {
+  border-color: #ffd814;
+  background-color: #fffbf0;
+}
+
+.boton-favorito:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 992px) {
   .contenedor-objeto {
     grid-template-columns: 1fr;

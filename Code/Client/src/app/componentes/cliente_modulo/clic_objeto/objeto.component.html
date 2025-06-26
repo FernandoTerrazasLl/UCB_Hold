@@ -19,14 +19,22 @@
       {{ producto.nombre + " " + producto.modelo + " " + producto.marca }}
     </h2>
     <p class="descripcion-objeto">{{ producto.descripcion }}</p>
-    <button
-      (click)="addproductocarrito()"
-      class="boton-carrito"
-      [class.plomo]="addedToCart"
-      [disabled]="addedToCart"
-    >
-      {{ addedToCart ? "Agregado al carrito" : "Agregar al carrito" }}
-    </button>
+    
+    <div class="botones">
+      <button 
+        (click)="addproductocarrito()" 
+        class="boton-carrito"
+        [disabled]="addedToCart">
+        {{ addedToCart ? "✓ En carrito" : "Agregar al carrito" }}
+      </button>
+      
+      <button 
+        (click)="toggleFavorito()" 
+        class="boton-favorito"
+        [disabled]="cargandoFavorito">
+        {{ esFavorito ? "★ Favorito" : "☆ Agregar a favoritos" }}
+      </button>
+    </div>
   </div>
 </div>
 
